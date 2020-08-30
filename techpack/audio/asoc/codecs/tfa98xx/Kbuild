@@ -86,6 +86,10 @@ CDEFINES +=	-DANI_LITTLE_BYTE_ENDIAN \
 		-D__linux__ \
 		-DDEBUG
 
+ifdef CONFIG_MACH_XIAOMI_SDMMAGPIE
+	CDEFINES += -DTFA_NON_DSP_SOLUTION
+endif
+
 KBUILD_CPPFLAGS += $(CDEFINES)
 
 # Currently, for versions of gcc which support it, the kernel Makefile
