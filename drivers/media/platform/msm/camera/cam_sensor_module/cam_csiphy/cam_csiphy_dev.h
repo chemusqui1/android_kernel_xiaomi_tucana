@@ -275,7 +275,6 @@ struct cam_csiphy_param {
  * @csiphy_cpas_cp_reg_mask: CP reg mask for phy instance
  */
 struct csiphy_device {
-	char device_name[CAM_CTX_DEV_NAME_MAX_LENGTH];
 	struct mutex mutex;
 	uint32_t hw_version;
 	enum cam_csiphy_state csiphy_state;
@@ -294,11 +293,13 @@ struct csiphy_device {
 	uint32_t clk_lane;
 	uint32_t acquire_count;
 	uint32_t start_dev_count;
+	char device_name[20];
 	uint32_t is_acquired_dev_combo_mode;
 	struct cam_hw_soc_info   soc_info;
 	uint32_t cpas_handle;
 	uint32_t config_count;
 	uint64_t csiphy_cpas_cp_reg_mask[CSIPHY_MAX_INSTANCES];
+	uint32_t is_acquired_dev_mipi_switch;
 };
 
 #endif /* _CAM_CSIPHY_DEV_H_ */

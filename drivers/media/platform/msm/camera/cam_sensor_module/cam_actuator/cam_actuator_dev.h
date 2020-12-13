@@ -112,7 +112,6 @@ struct intf_params {
  * @last_flush_req: Last request to flush
  */
 struct cam_actuator_ctrl_t {
-	char device_name[CAM_CTX_DEV_NAME_MAX_LENGTH];
 	struct i2c_driver *i2c_driver;
 	enum cci_i2c_master_t cci_i2c_master;
 	enum cci_device_num cci_num;
@@ -127,6 +126,7 @@ struct cam_actuator_ctrl_t {
 	struct i2c_data_settings i2c_data;
 	struct cam_actuator_query_cap act_info;
 	struct intf_params bridge_intf;
+	char device_name[20];
 	uint32_t last_flush_req;
 };
 

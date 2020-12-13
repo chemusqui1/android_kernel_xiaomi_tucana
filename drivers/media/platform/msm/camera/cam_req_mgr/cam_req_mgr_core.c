@@ -255,7 +255,7 @@ static int __cam_req_mgr_traverse(struct cam_req_mgr_traverse *traverse_data)
 		}
 	} else {
 		/* This pd table is not ready to proceed with asked idx */
-		CAM_INFO(CAM_CRM,
+		CAM_DBG(CAM_CRM,
 			"Skip Frame: req: %lld not ready pd: %d open_req count: %d",
 			CRM_GET_REQ_ID(traverse_data->in_q, curr_idx),
 			tbl->pd,
@@ -1946,7 +1946,7 @@ int cam_req_mgr_process_flush_req(void *priv, void *data)
 	mutex_lock(&link->req.lock);
 	if (flush_info->flush_type == CAM_REQ_MGR_FLUSH_TYPE_ALL) {
 		link->last_flush_id = flush_info->req_id;
-		CAM_INFO(CAM_CRM, "Last request id to flush is %lld",
+		CAM_DBG(CAM_CRM, "Last request id to flush is %lld",
 			flush_info->req_id);
 		for (i = 0; i < in_q->num_slots; i++) {
 			slot = &in_q->slot[i];

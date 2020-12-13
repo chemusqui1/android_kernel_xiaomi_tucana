@@ -1014,7 +1014,7 @@ static int cam_cpas_hw_start(void *hw_priv, void *start_args,
 	if (rc)
 		goto done;
 
-	CAM_INFO(CAM_CPAS,
+	CAM_DBG(CAM_CPAS,
 		"AXI client=[%d][%s][%d] comp[%llu], comp_ab[%llu], uncomp[%llu]",
 		client_indx, cpas_client->data.identifier,
 		cpas_client->data.cell_index, axi_vote->compressed_bw,

@@ -162,7 +162,6 @@ struct cam_flash_func_tbl {
 
 /**
  *  struct cam_flash_ctrl
- * @device_name         : Device name
  * @soc_info            : Soc related information
  * @pdev                : Platform device
  * @per_frame[]         : Per_frame setting array
@@ -188,7 +187,6 @@ struct cam_flash_func_tbl {
  * @last_flush_req      : last request to flush
  */
 struct cam_flash_ctrl {
-	char device_name[CAM_CTX_DEV_NAME_MAX_LENGTH];
 	struct cam_hw_soc_info              soc_info;
 	struct platform_device             *pdev;
 	struct cam_sensor_power_ctrl_t      power_info;
