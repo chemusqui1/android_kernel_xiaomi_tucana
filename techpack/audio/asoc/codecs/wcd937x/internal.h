@@ -1,5 +1,5 @@
 /* Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
-
+ * Copyright (C) 2021 XiaoMi, Inc.
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
  * only version 2 as published by the Free Software Foundation.
@@ -92,6 +92,7 @@ struct wcd937x_priv {
 	struct snd_info_entry *version_entry;
 	/*Entry for Variant info*/
 	struct snd_info_entry *variant_entry;
+	int ear_rx_path;
 	int ana_clk_count;
 	struct mutex ana_tx_clk_lock;
 };
