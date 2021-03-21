@@ -146,6 +146,19 @@
 		};
 	};
 
+    rpmh-regulator-smpa5 {
+        compatible = "qcom,rpmh-vrm-regulator";
+        mboxes = <&apps_rsc 0>;
+        qcom,resource-name = "smpa5";
+        S5A: pm6150_s5: regulator-pm6150-s5 {
+            regulator-name = "pm6150_s5";
+            qcom,set = <RPMH_REGULATOR_SET_ALL>;
+            regulator-min-microvolt = <1744000>;
+            regulator-max-microvolt = <2040000>;
+            qcom,init-voltage = <1744000>;
+        };
+    };
+
 	rpmh-regulator-smpc8 {
 		compatible = "qcom,rpmh-vrm-regulator";
 		mboxes = <&apps_rsc 0>;
@@ -291,7 +304,7 @@
 		L6A: pm6150_l6: regulator-pm6150-l6 {
 			regulator-name = "pm6150_l6";
 			qcom,set = <RPMH_REGULATOR_SET_ALL>;
-			regulator-min-microvolt = <1096000>;
+			regulator-min-microvolt = <1050000>;
 			regulator-max-microvolt = <1304000>;
 			qcom,init-voltage = <1096000>;
 			qcom,init-mode = <RPMH_REGULATOR_MODE_LPM>;

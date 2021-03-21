@@ -423,8 +423,8 @@
 	/* GPIO_65 : FP_RESET_N */
 	msm_gpio_65: msm_gpio_65 {
 		mux {
-			 pins = "gpio65";
-			 function = "gpio";
+			pins = "gpio65";
+			function = "gpio";
 		};
 
 		config {

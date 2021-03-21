@@ -3,15 +3,8 @@ this file is for attribution only of aquila
 And public attribution of xiaomi platforms(like F3 and so and)
 */
 
-#include <dt-bindings/gpio/gpio.h>
-#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-#include <dt-bindings/iio/qcom,spmi-vadc.h>
-#include <dt-bindings/input/input.h>
-
-#include "sdmmagpie-thermal-overlay.dtsi"
-#include "sdmmagpie-sde-display.dtsi"
-
 #include "davinci-sdmmagpie-pinctrl.dtsi"
+#include "xiaomi-sdmmagpie-common.dtsi"
 #include "davinci-sdmmagpie-camera-sensor.dtsi"
 
 &soc {
@@ -115,57 +108,6 @@ And public attribution of xiaomi platforms(like F3 and so and)
 	};
 };
 
-&tlmm {
-	pmx_ts_active {
-		ts_active: ts_active {
-			mux {
-				pins = "gpio8", "gpio9";
-				function = "gpio";
-			};
-
-			config {
-				pins = "gpio8", "gpio9";
-				drive-strength = <8>;
-				bias-pull-up;
-			};
-		};
-	};
-
-	pmx_ts_int_suspend {
-		ts_int_suspend: ts_int_suspend {
-			mux {
-				pins = "gpio9";
-				function = "gpio";
-			};
-
-			config {
-				pins = "gpio9";
-				drive-strength = <2>;
-				bias-pull-down;
-			};
-		};
-	};
-
-	pmx_ts_reset_suspend {
-		ts_reset_suspend: ts_reset_suspend {
-			mux {
-				pins = "gpio8";
-				function = "gpio";
-			};
-
-			config {
-				pins = "gpio8";
-				drive-strength = <2>;
-				bias-pull-down;
-			};
-		};
-	};
-};
-
-&qupv3_se3_4uart {
-	status = "ok";
-};
-
 &qupv3_se8_2uart {
 	status = "ok";
 };
@@ -204,146 +146,6 @@ And public attribution of xiaomi platforms(like F3 and so and)
 	io-channels = <&pm6150l_vadc ADC_AMUX_THM2>;
 	io-channel-names = "cp_die_temp";
 	status = "ok";
-};
-
-&ufsphy_mem {
-	compatible = "qcom,ufs-phy-qmp-v3";
-
-	vdda-phy-supply = <&pm6150_l4>; /* 0.88v */
-	vdda-phy-always-on;
-	vdda-pll-supply = <&pm6150l_l3>; /* 1.2v */
-	vdda-phy-max-microamp = <62900>;
-	vdda-pll-max-microamp = <18300>;
-
-	status = "ok";
-};
-
-&ufshc_mem {
-	vdd-hba-supply = <&ufs_phy_gdsc>;
-	vdd-hba-fixed-regulator;
-	vcc-supply = <&pm6150_l19>;
-	vcc-voltage-level = <2950000 2960000>;
-	vccq2-supply = <&pm6150_l12>;
-	vccq2-voltage-level = <1750000 1950000>;
-	vcc-max-microamp = <600000>;
-	vccq2-max-microamp = <600000>;
-
-	qcom,vddp-ref-clk-supply = <&pm6150l_l3>;
-	qcom,vddp-ref-clk-max-microamp = <100>;
-
-	status = "ok";
-};
-
-&sdhc_1 {
-	vdd-supply = <&pm6150_l19>;
-	qcom,vdd-voltage-level = <2950000 2950000>;
-	qcom,vdd-current-level = <0 570000>;
-
-	vdd-io-supply = <&pm6150_l12>;
-	qcom,vdd-io-always-on;
-	qcom,vdd-io-lpm-sup;
-	qcom,vdd-io-voltage-level = <1800000 1800000>;
-	qcom,vdd-io-current-level = <0 325000>;
-
-	pinctrl-names = "active", "sleep";
-	pinctrl-0 = <&sdc1_clk_on &sdc1_cmd_on &sdc1_data_on &sdc1_rclk_on>;
-	pinctrl-1 = <&sdc1_clk_off &sdc1_cmd_off &sdc1_data_off &sdc1_rclk_off>;
-
-	status = "ok";
-};
-
-&sdhc_2 {
-	vdd-supply = <&pm6150l_l9>;
-	qcom,vdd-voltage-level = <2950000 2950000>;
-	qcom,vdd-current-level = <0 800000>;
-
-	vdd-io-supply = <&pm6150l_l6>;
-	qcom,vdd-io-voltage-level = <1800000 2950000>;
-	qcom,vdd-io-current-level = <0 22000>;
-
-	pinctrl-names = "active", "sleep";
-	pinctrl-0 = <&sdc2_clk_on  &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
-	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
-
-	cd-gpios = <&tlmm 69 GPIO_ACTIVE_HIGH>;
-
-	status = "disabled";
-};
-
-&pm6150l_gpios {
-	key_vol_up {
-		key_vol_up_default: key_vol_up_default {
-			pins = "gpio2";
-			function = "normal";
-			input-enable;
-			bias-pull-up;
-			power-source = <0>;
-		};
-	};
-};
-
-&soc {
-	gpio_keys {
-		compatible = "gpio-keys";
-		label = "gpio-keys";
-
-		pinctrl-names = "default";
-		pinctrl-0 = <&key_vol_up_default>;
-
-		vol_up {
-			label = "volume_up";
-			gpios = <&pm6150l_gpios 2 GPIO_ACTIVE_LOW>;
-			linux,input-type = <1>;
-			linux,code = <KEY_VOLUMEUP>;
-			linux,can-disable;
-			debounce-interval = <15>;
-			gpio-key,wakeup;
-		};
-	};
-};
-
-&qusb_phy0 {
-	qcom,qusb-phy-init-seq =
-		/* <value reg_offset> */
-		   <0x23 0x210 /* PWR_CTRL1 */
-		    0x03 0x04  /* PLL_ANALOG_CONTROLS_TWO */
-		    0x7c 0x18c /* PLL_CLOCK_INVERTERS */
-		    0x80 0x2c  /* PLL_CMODE */
-		    0x0a 0x184 /* PLL_LOCK_DELAY */
-		    0x19 0xb4  /* PLL_DIGITAL_TIMERS_TWO */
-		    0x40 0x194 /* PLL_BIAS_CONTROL_1 */
-		    0x1c 0x198 /* PLL_BIAS_CONTROL_2 */
-		    0x21 0x214 /* PWR_CTRL2 */
-		    0x00 0x220 /* IMP_CTRL1 */
-		    0x18 0x224 /* IMP_CTRL2 */
-		    0x16 0x240 /* TUNE1 */
-		    0x29 0x244 /* TUNE2 */
-		    0xca 0x248 /* TUNE3 */
-		    0x02 0x24c /* TUNE4 */
-		    0x03 0x250 /* TUNE5 */
-		    0x00 0x23c /* CHG_CTRL2 */
-		    0x22 0x210>; /* PWR_CTRL1 */
-
-	qcom,qusb-phy-host-init-seq =
-		/* <value reg_offset> */
-		   <0x23 0x210 /* PWR_CTRL1 */
-		    0x03 0x04  /* PLL_ANALOG_CONTROLS_TWO */
-		    0x7c 0x18c /* PLL_CLOCK_INVERTERS */
-		    0x80 0x2c  /* PLL_CMODE */
-		    0x0a 0x184 /* PLL_LOCK_DELAY */
-		    0x19 0xb4  /* PLL_DIGITAL_TIMERS_TWO */
-		    0x40 0x194 /* PLL_BIAS_CONTROL_1 */
-		    0x20 0x198 /* PLL_BIAS_CONTROL_2 */
-		    0x21 0x214 /* PWR_CTRL2 */
-		    0x00 0x220 /* IMP_CTRL1 */
-		    0x18 0x224 /* IMP_CTRL2 */
-		    0x37 0x240 /* TUNE1 */
-		    0x29 0x244 /* TUNE2 */
-		    0xca 0x248 /* TUNE3 */
-		    0x04 0x24c /* TUNE4 */
-		    0x03 0x250 /* TUNE5 */
-		    0x00 0x23c /* CHG_CTRL2 */
-		    0x22 0x210>; /* PWR_CTRL1 */
 };
 
 &usb0 {
@@ -435,20 +237,6 @@ And public attribution of xiaomi platforms(like F3 and so and)
 	reg = <0x86d00000 0x3E00000>;
 };
 
-&reserved_memory {
-	ramdump_fb_mem: ramdump_fb_region@af000000 {
-		compatible = "removed-dma-pool";
-		no-map;
-		reg = <0x0 0xaf000000 0x0 0x1000000>;
-	};
-
-	xbl_dump_mem: xbl_dump_mem@85d00000 {
-		compatible = "removed-dma-pool";
-		no-map;
-		reg = <0x0 0x85d00000 0x0 0x100000>;
-	};
-};
-
 &dsi_ss_fhd_ea_f10_cmd {
 	qcom,panel-supply-entries = <&dsi_panel_pwr_supply_labibb_amoled>;
 	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_dcs";
@@ -473,67 +261,6 @@ And public attribution of xiaomi platforms(like F3 and so and)
 
 &dsi_sim_vid_display {
 	qcom,dsi-display-active;
-};
-
-/* Front motor */
-&pm6150l_pwm {
-	status = "ok";
-};
-
-&soc {
-	ti,drv8846@0 {
-		cell-index = <0>;
-		reg = <0x00 0x00>;
-		compatible = "ti,drv8846";
-		pwms = <&pm6150l_pwm 1 1000000>;
-		motor,gpio-mode0 = <&tlmm 91 0x00>;
-		motor,gpio-mode1 = <&tlmm 66 0x00>;
-		motor,gpio-sleep = <&tlmm 88 0x00>;
-		motor,gpio-dir = <&tlmm 55 0x00>;
-		motor,gpio-pwren = <&tlmm 90 0x00>;
-
-		motor,rampup-pwm-period-ns = <625000>;
-		motor,rampup-duration-ms = <50>;
-		motor,high-pwm-period-ns = <52083>;
-		motor,high-duration-ms = <720>;
-		motor,rampdown-pwm-period-ns = <625000>;
-		motor,rampdown-duration-ms = <50>;
-		motor,step-mode = <2>;
-
-		pinctrl-names = "default";
-		pinctrl-0 = <&pwm_out_gpio10_default &motor_gpio_default &motor_gpio_fault>;
-		status = "ok";
-	};
-};
-
-&pm6150l_lpg {
-	qcom,lut-pattern-switch;
-	qcom,lut-patterns = <0 1 2 3 4 5 6 7 8 9 10 11 12 13
-				12 11 10 9 8 7 6 5 4 3 2 1 0>;
-	qcom,lut-patterns-camera = <0 1 3 5 8 10 12 15 18 22 26 32 38 44 50 60 72 82 90 96 98 99 100
-				99 98 96 90 82 72 60 50 44 38 32 26 22 18 15 12 10 8 5 3 1 0>;
-};
-
-&pwm_lpg2 {
-	qcom,lpg-chan-id = <2>;
-	qcom,ramp-step-ms = <70>;
-	qcom,ramp-pause-hi-count = <2>;
-	qcom,ramp-pause-lo-count = <30>;
-	qcom,ramp-low-index = <0>;
-	qcom,ramp-high-index = <26>;
-	qcom,ramp-from-low-to-high;
-	qcom,ramp-pattern-repeat;
-};
-
-&pwm_lpg3 {
-	qcom,lpg-chan-id = <3>;
-	qcom,ramp-step-ms = <70>;
-	qcom,ramp-pause-hi-count = <2>;
-	qcom,ramp-pause-lo-count = <30>;
-	qcom,ramp-low-index = <0>;
-	qcom,ramp-high-index = <26>;
-	qcom,ramp-from-low-to-high;
-	qcom,ramp-pattern-repeat;
 };
 
 &pm6150_vadc {
@@ -595,6 +322,7 @@ And public attribution of xiaomi platforms(like F3 and so and)
 };
 
 &pm6150l_vadc {
+
 	conn_therm {
 		reg = <ADC_AMUX_THM1_PU2>;
 		label = "conn_therm";
@@ -662,6 +390,7 @@ And public attribution of xiaomi platforms(like F3 and so and)
 };
 
 &thermal_zones {
+
 	xo_therm {
 		polling-delay-passive = <0>;
 		polling-delay = <0>;
@@ -763,4 +492,65 @@ And public attribution of xiaomi platforms(like F3 and so and)
 	quiet-therm-step {
 		disable-thermal-zone;
 	};
+};
+
+/* Front motor */
+&pm6150l_pwm {
+	status = "ok";
+};
+
+&soc {
+	ti,drv8846@0 {
+		cell-index = <0>;
+		reg = <0x00 0x00>;
+		compatible = "ti,drv8846";
+		pwms = <&pm6150l_pwm 1 1000000>;
+		motor,gpio-mode0 = <&tlmm 91 0x00>;
+		motor,gpio-mode1 = <&tlmm 66 0x00>;
+		motor,gpio-sleep = <&tlmm 88 0x00>;
+		motor,gpio-dir = <&tlmm 55 0x00>;
+		motor,gpio-pwren = <&tlmm 90 0x00>;
+
+		motor,rampup-pwm-period-ns = <625000>;
+		motor,rampup-duration-ms = <50>;
+		motor,high-pwm-period-ns = <52083>;
+		motor,high-duration-ms = <720>;
+		motor,rampdown-pwm-period-ns = <625000>;
+		motor,rampdown-duration-ms = <50>;
+		motor,step-mode = <2>;
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&pwm_out_gpio10_default &motor_gpio_default &motor_gpio_fault>;
+		status = "ok";
+	};
+};
+
+&pm6150l_lpg {
+	qcom,lut-pattern-switch;
+	qcom,lut-patterns = <0 1 2 3 4 5 6 7 8 9 10 11 12 13
+				12 11 10 9 8 7 6 5 4 3 2 1 0>;
+	qcom,lut-patterns-camera = <0 1 3 5 8 10 12 15 18 22 26 32 38 44 50 60 72 82 90 96 98 99 100
+				99 98 96 90 82 72 60 50 44 38 32 26 22 18 15 12 10 8 5 3 1 0>;
+};
+
+&pwm_lpg2 {
+	qcom,lpg-chan-id = <2>;
+	qcom,ramp-step-ms = <70>;
+	qcom,ramp-pause-hi-count = <2>;
+	qcom,ramp-pause-lo-count = <30>;
+	qcom,ramp-low-index = <0>;
+	qcom,ramp-high-index = <26>;
+	qcom,ramp-from-low-to-high;
+	qcom,ramp-pattern-repeat;
+};
+
+&pwm_lpg3 {
+	qcom,lpg-chan-id = <3>;
+	qcom,ramp-step-ms = <70>;
+	qcom,ramp-pause-hi-count = <2>;
+	qcom,ramp-pause-lo-count = <30>;
+	qcom,ramp-low-index = <0>;
+	qcom,ramp-high-index = <26>;
+	qcom,ramp-from-low-to-high;
+	qcom,ramp-pattern-repeat;
 };
