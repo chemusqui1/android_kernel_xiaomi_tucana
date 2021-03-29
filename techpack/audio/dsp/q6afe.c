@@ -248,7 +248,6 @@ int afe_get_topology(int port_id)
 done:
 	return topology;
 }
-
 EXPORT_SYMBOL(afe_get_topology);
 
 /**
@@ -569,9 +568,8 @@ static int32_t afe_callback(struct apr_client_data *data, void *priv)
 					   data->payload_size))
 			return 0;
 
-		param_id = (data->opcode == AFE_PORT_CMDRSP_GET_PARAM_V3) ?
-					payload[3] :
-					payload[2];
+		param_id = (data->opcode == AFE_PORT_CMDRSP_GET_PARAM_V3)
+				? payload[3] : payload[2];
 
 		if (param_id == AFE_PARAM_ID_DEV_TIMING_STATS) {
 			av_dev_drift_afe_cb_handler(data->opcode, data->payload,
@@ -8936,4 +8934,3 @@ done:
 	return ret;
 }
 EXPORT_SYMBOL(afe_unvote_lpass_core_hw);
-

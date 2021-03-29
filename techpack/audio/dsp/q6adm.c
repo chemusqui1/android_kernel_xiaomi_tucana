@@ -1,4 +1,5 @@
 /* Copyright (c) 2012-2020, The Linux Foundation. All rights reserved.
+ * Copyright (C) 2021 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -2850,7 +2851,7 @@ int adm_open(int port_id, int path, int rate, int channel_mode, int topology,
 	void *adm_params = NULL;
 	int param_size;
 
-	pr_debug("%s:port %#x path:%d rate:%d mode:%d perf_mode:%d,topo_id 0x%x bit_width %d app_type %d acdb_id %d\n",
+	pr_info("%s:port %#x path:%d rate:%d mode:%d perf_mode:%d,topo_id 0x%x bit_width %d app_type %d acdb_id %d\n",
 		__func__, port_id, path, rate, channel_mode, perf_mode,
 			 topology, bit_width, app_type, acdb_id);
 

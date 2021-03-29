@@ -659,8 +659,8 @@ static struct wcd_mbhc_config wcd_mbhc_cfg = {
 	.swap_gnd_mic = NULL,
 	.hs_ext_micbias = true,
 	.key_code[0] = KEY_MEDIA,
-	.key_code[1] = KEY_VOLUMEUP,
-	.key_code[2] = KEY_VOLUMEDOWN,
+	.key_code[1] = BTN_1,
+	.key_code[2] = BTN_2,
 	.key_code[3] = 0,
 	.key_code[4] = 0,
 	.key_code[5] = 0,
@@ -8507,6 +8507,18 @@ static struct snd_soc_card *populate_snd_card_dailinks(struct device *dev)
 					dev_info(dev, "%s: hardware is HARDWARE_PLATFORM_DAVINCI.\n", __func__);
 					msm_mi2s_be_dai_links[0].codec_name = "tfa98xx.3-0034";
 					msm_mi2s_be_dai_links[0].codec_dai_name = "tfa98xx-aif-3-34";
+				} else if (HARDWARE_PLATFORM_PHOENIX == hw_platform) {
+					dev_info(dev, "%s: hardware is HARDWARE_PLATFORM_PHOENIX.\n", __func__);
+					msm_mi2s_be_dai_links[0].codec_name = "tfa98xx.1-0034";
+					msm_mi2s_be_dai_links[0].codec_dai_name = "tfa98xx-aif-1-34";
+				} else if (HARDWARE_PLATFORM_TUCANA == hw_platform) {
+					dev_info(dev, "%s: hardware is HARDWARE_PLATFORM_DAVINCI.\n", __func__);
+					msm_mi2s_be_dai_links[0].codec_name = "tfa98xx.2-0034";
+					msm_mi2s_be_dai_links[0].codec_dai_name = "tfa98xx-aif-2-34";
+				} else if (HARDWARE_PLATFORM_TOCO == hw_platform) {
+					dev_info(dev, "%s: hardware is HARDWARE_PLATFORM_TOCO.\n", __func__);
+					msm_mi2s_be_dai_links[0].codec_name = "tfa98xx.2-0034";
+					msm_mi2s_be_dai_links[0].codec_dai_name = "tfa98xx-aif-2-34";
 				} else {
 					dev_info(dev, "%s: hardware is unknown, %d.\n", __func__, hw_platform);
 
