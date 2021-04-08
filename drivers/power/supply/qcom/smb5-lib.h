@@ -697,6 +697,7 @@ struct smb_charger {
 	bool			use_extcon;
 	bool			otg_present;
 	bool			hvdcp_disable;
+	bool			fake_hvdcp3;
 	int			hw_max_icl_ua;
 	int			auto_recharge_soc;
 	enum sink_src_mode	sink_src_mode;
@@ -799,6 +800,10 @@ struct smb_charger {
 	bool			cc_un_compliant_detected;
 	bool			snk_debug_acc_detected;
 
+	/* used for bq charge pump solution */
+	struct usbpd		*pd;
+	bool			use_bq_pump;
+
 	/* reduce fcc for esr cal*/
 	int			esr_work_status;
 	bool			cp_charge_enabled;
@@ -833,6 +838,7 @@ struct smb_charger {
 	int			ffc_high_tbat;
 	bool			slowly_charging;
 	bool			already_start_step_charge_work;
+	bool			bq_input_suspend;
 	int			fcc_calibrate;
 
 	/* support status support when driver probe*/
@@ -1092,6 +1098,8 @@ int smblib_get_prop_battery_slowly_charging(struct smb_charger *chg,
 					union power_supply_propval *val);
 int smblib_set_prop_battery_slowly_charging(struct smb_charger *chg,
 					const union power_supply_propval *val);
+int smblib_get_prop_battery_bq_input_suspend(struct smb_charger *chg,
+					union power_supply_propval *val);
 
 int smblib_get_qc3_main_icl_offset(struct smb_charger *chg, int *offset_ua);
 
