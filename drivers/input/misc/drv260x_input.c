@@ -465,7 +465,7 @@ static int drv260x_init(struct drv260x_data *haptics)
 	int error;
 	unsigned int cal_buf;
 
-	pr_err("drv260x_init start...\n");
+	//pr_err("drv260x_init start...\n");
 
 	error = regmap_read(haptics->regmap, 0x01, &cal_buf);
 
@@ -475,11 +475,11 @@ static int drv260x_init(struct drv260x_data *haptics)
 		return error;
 	}
 
-	pr_err("Get drv260x status reg[0x01]=%#x\n", cal_buf);
-	if ((cal_buf >> 6) & 0x01)
+	//pr_err("Get drv260x status reg[0x01]=%#x\n", cal_buf);
+	/*if ((cal_buf >> 6) & 0x01)
 		pr_err("drv260x Suspend...\n");
 	else
-		pr_err("drv260x Activate...\n");
+		pr_err("drv260x Activate...\n");*/
 
 	//error = regmap_write(haptics->regmap,
 	//                   DRV260X_RATED_VOLT, haptics->rated_voltage);
@@ -499,7 +499,7 @@ static int drv260x_init(struct drv260x_data *haptics)
 			error);
 		return error;
 	}
-	pr_err("drv260x, haptics mode=%d\n", haptics->mode);
+	//pr_err("drv260x, haptics mode=%d\n", haptics->mode);
 
 	switch (haptics->mode) {
 	case DRV260X_LRA_MODE:
@@ -571,8 +571,8 @@ static int drv260x_init(struct drv260x_data *haptics)
 		}
 
 		haptics->play_effect_speed = ((cal_buf & 0x10) ? 1 : 5);
-		pr_err("drv260x play_effect_speed %d\n",
-		       haptics->play_effect_speed);
+		/*pr_err("drv260x play_effect_speed %d\n",
+		       haptics->play_effect_speed);*/
 		/* No need to set GO bit here */
 		return 0;
 	}
@@ -594,7 +594,7 @@ static int drv260x_init(struct drv260x_data *haptics)
 	} while (cal_buf == DRV260X_GO_BIT);
 
 	error = regmap_read(haptics->regmap, 0x00, &cal_buf);
-	//pr_err("drv260x_init end,  device_id=%#x\n", cal_buf);
+	////pr_err("drv260x_init end,  device_id=%#x\n", cal_buf);
 
 	if (error) {
 		dev_err(&haptics->client->dev,
@@ -662,13 +662,13 @@ static int drv260x_haptics_stop(struct android_hal_stub *android)
 	    container_of(android, struct drv260x_data, android);
 	int error = 0;
 
-	pr_err("drv260x_haptics_stop motor\n");
+	//pr_err("drv260x_haptics_stop motor\n");
 	error = regmap_write(haptics->regmap, DRV260X_RT_PB_IN, 0x00);
 	error = regmap_write(haptics->regmap, DRV260X_GO, 0x00);
 	error = regmap_write(haptics->regmap, MODE_REG, MODE_STANDBY);
 
 	if (error) {
-		pr_err("drv260x_haptics_stop write fail.\n");
+		//pr_err("drv260x_haptics_stop write fail.\n");
 	}
 
 	return 0;
@@ -682,14 +682,14 @@ static int android_haptics_stop_playing(struct android_hal_stub *android)
 	    container_of(android, struct drv260x_data, android);
 	int error = 0;
 
-	pr_err("drv260x timer stop  playing...\n");
+	//pr_err("drv260x timer stop  playing...\n");
 
 	error = regmap_write(haptics->regmap, DRV260X_RT_PB_IN, 0x00);
 	error = regmap_write(haptics->regmap, DRV260X_GO, 0x00);
 	error = regmap_write(haptics->regmap, MODE_REG, MODE_STANDBY);
 
 	if (error) {
-		pr_err("android_haptics_timer write fail.\n");
+		//pr_err("android_haptics_timer write fail.\n");
 	}
 	//if (android->haptics_playing) {
 	//      hrtimer_cancel(&android->stop_timer);
@@ -733,21 +733,21 @@ static void android_haptics_play(struct work_struct *work)
 	int waveform_select = 0;
 	unsigned char value = 0;
 
-	pr_err("android_haptics_play start...\n");
+	//pr_err("android_haptics_play start...\n");
 
 	mutex_lock(&android->lock);
 
 	//android_haptics_stop_playing(android);
 	drv260x_haptics_stop(android);
 
-	pr_err("haptics_play effect_type=%d, work_mode=%d, state=%d \n",
-	       haptics->effect_type, haptics->work_mode, haptics->state);
+	/*pr_err("haptics_play effect_type=%d, work_mode=%d, state=%d \n",
+	       haptics->effect_type, haptics->work_mode, haptics->state);*/
 
 	if (haptics->state) {
 
 		if (haptics->effect_type == FF_PERIODIC &&
 		    haptics->work_mode == DRV260X_HAPTIC_ACTIVATE_RAM_MODE) {
-			//pr_err("Start to play effect vibrating.\n");
+			////pr_err("Start to play effect vibrating.\n");
 
 			error =
 			    regmap_write(haptics->regmap, MODE_REG,
@@ -759,13 +759,13 @@ static void android_haptics_play(struct work_struct *work)
 				waveform_select = 1;
 				if (haptics->magnitude == 0x3FFF) {
 					waveform_select = 1;
-					pr_err("drv260x light click.\n");
+					//pr_err("drv260x light click.\n");
 				} else if (haptics->magnitude == 0x5FFF) {
 					waveform_select = 2;
-					pr_err("drv260x medium click.\n");
+					//pr_err("drv260x medium click.\n");
 				} else if (haptics->magnitude == 0x7FFF) {
 					waveform_select = 3;
-					pr_err("drv260x strong click.\n");
+					//pr_err("drv260x strong click.\n");
 				}
 				break;
 
@@ -773,26 +773,26 @@ static void android_haptics_play(struct work_struct *work)
 				waveform_select = 4;
 				if (haptics->magnitude == 0x3FFF) {
 					waveform_select = 4;
-					pr_err("drv260x light dclick.\n");
+					//pr_err("drv260x light dclick.\n");
 				} else if (haptics->magnitude == 0x5FFF) {
 					waveform_select = 5;
-					pr_err("drv260x medium dclick.\n");
+					//pr_err("drv260x medium dclick.\n");
 				} else if (haptics->magnitude == 0x7FFF) {
 					waveform_select = 6;
-					pr_err("drv260x strong dclick.\n");
+					//pr_err("drv260x strong dclick.\n");
 				}
 				break;
 			case DRV260X_EFFECT_TICK:
 				waveform_select = 7;
 				if (haptics->magnitude == 0x3FFF) {
 					waveform_select = 7;
-					pr_err("drv260x light tick.\n");
+					//pr_err("drv260x light tick.\n");
 				} else if (haptics->magnitude == 0x5FFF) {
 					waveform_select = 8;
-					pr_err("drv260x medium tick.\n");
+					//pr_err("drv260x medium tick.\n");
 				} else if (haptics->magnitude == 0x7FFF) {
 					waveform_select = 9;
-					pr_err("drv260x strong tick.\n");
+					//pr_err("drv260x strong tick.\n");
 				}
 
 				break;
@@ -800,13 +800,13 @@ static void android_haptics_play(struct work_struct *work)
 				waveform_select = 10;
 				if (haptics->magnitude == 0x3FFF) {
 					waveform_select = 10;
-					pr_err("drv260x light hclick.\n");
+					//pr_err("drv260x light hclick.\n");
 				} else if (haptics->magnitude == 0x5FFF) {
 					waveform_select = 11;
-					pr_err("drv260x medium hclick.\n");
+					//pr_err("drv260x medium hclick.\n");
 				} else if (haptics->magnitude == 0x7FFF) {
 					waveform_select = 12;
-					pr_err("drv260x strong hclick.\n");
+					//pr_err("drv260x strong hclick.\n");
 				}
 
 				break;
@@ -816,8 +816,8 @@ static void android_haptics_play(struct work_struct *work)
 				break;
 			}
 
-			pr_err("android_haptics_play waveform_select= %d\n",
-			       waveform_select);
+			/*pr_err("android_haptics_play waveform_select= %d\n",
+			       waveform_select);*/
 			/* TODO write effect ID to sequencer registers DRV260X_WV_SEQ_1 */
 
 			if (haptics->effect_id == DRV260X_EFFECT_DOUBLECLICK) {
@@ -848,14 +848,14 @@ static void android_haptics_play(struct work_struct *work)
 
 			regmap_write(haptics->regmap, DRV260X_GO, 1);
 
-			pr_err("drv260x play effect vibrating. duration= %d\n",
-			       android->duration);
+			/*pr_err("drv260x play effect vibrating. duration= %d\n",
+			       android->duration);*/
 		} else if (haptics->effect_type == FF_CONSTANT
 			   && haptics->work_mode ==
 			   DRV260X_HAPTIC_ACTIVATE_RTP_MODE) {
 
-			pr_err("drv260x play RTP vibrating. duration= %d\n",
-			       android->duration);
+			/*pr_err("drv260x play RTP vibrating. duration= %d\n",
+			       android->duration);*/
 			regmap_write(haptics->regmap, MODE_REG,
 				     MODE_REAL_TIME_PLAYBACK);
 
@@ -865,18 +865,18 @@ static void android_haptics_play(struct work_struct *work)
 
 			error = regmap_write(haptics->regmap, 0x02, value);
 			if (error) {
-				pr_err("Failed to start RTP vibrating: %d\n",
-				       error);
+				/*pr_err("Failed to start RTP vibrating: %d\n",
+				       error);*/
 				goto error_exit;
 			}
 
-			pr_err
+			//pr_err
 			    ("Start to play RTP vibrating. duration= %d, AMP= %d\n",
 			     android->duration, value);
 
 		}
 	} else {
-		pr_err("drv260x not support mode\n");
+		//pr_err("drv260x not support mode\n");
 	}
 
 	if (android->duration != 0) {
@@ -912,7 +912,7 @@ static int android_hal_stub_init(struct drv260x_data *haptics)
 	android->haptics_playing = false;
 	android->wq = alloc_workqueue("android_wq", WQ_HIGHPRI | WQ_UNBOUND, 1);
 	if (!android->wq) {
-		pr_err("Failed to allocate workqueue for android hal stub\n");
+		//pr_err("Failed to allocate workqueue for android hal stub\n");
 		return -ENOMEM;
 	}
 
@@ -1027,15 +1027,15 @@ static void drv2604_firmware_load(const struct firmware *fw, void *context)
 		    || (pDrv2604data->fw_header.fw_chksum != fw_chksum(fw))
 		    || (pDrv2604data->fw_header.fw_effCount < 1)) {
 
-			printk
+			/*printk
 			    ("%s, ERROR!! firmware not right:Magic=0x%x,Size=%d,chksum=0x%x, count=%d\n",
 			     __FUNCTION__, pDrv2604data->fw_header.fw_magic,
 			     pDrv2604data->fw_header.fw_size,
 			     pDrv2604data->fw_header.fw_chksum,
-			     pDrv2604data->fw_header.fw_effCount);
+			     pDrv2604data->fw_header.fw_effCount);*/
 		} else {
-			printk("%s, firmware good, count = %d\n", __FUNCTION__,
-			       pDrv2604data->fw_header.fw_effCount);
+			/*printk("%s, firmware good, count = %d\n", __FUNCTION__,
+			       pDrv2604data->fw_header.fw_effCount);*/
 
 			pDrv2604data->effects_count =
 			    pDrv2604data->fw_header.fw_effCount;
@@ -1044,8 +1044,8 @@ static void drv2604_firmware_load(const struct firmware *fw, void *context)
 				    GFP_KERNEL);
 
 			if (pDrv2604data->pEffDuration == NULL) {
-				pr_err("%s: can not allocate memory\n",
-				       __func__);
+				/*pr_err("%s: can not allocate memory\n",
+				       __func__);*/
 				//return -ENOMEM;
 			}
 			pTmp =
@@ -1066,11 +1066,11 @@ static void drv2604_firmware_load(const struct firmware *fw, void *context)
 			fwsize = size - sizeof(struct drv2604_fw_header)
 			    - pDrv2604data->effects_count * sizeof(u32);
 
-			printk("%s, firmware good, fwsize = %d\n", __FUNCTION__,
-			       fwsize);
+			/*printk("%s, firmware good, fwsize = %d\n", __FUNCTION__,
+			       fwsize);*/
 
 			for (i = 0; i < fwsize; i++) {
-				printk("firmware bytes[0x%x]\n", pTmp[i]);
+				//printk("firmware bytes[0x%x]\n", pTmp[i]);
 				regmap_write(pDrv2604data->regmap,
 					     DRV2604_REG_RAM_DATA, pTmp[i]);
 			}
@@ -1079,7 +1079,7 @@ static void drv2604_firmware_load(const struct firmware *fw, void *context)
 					    DEV_STANDBY);
 		}
 	} else {
-		printk("%s, ERROR!! firmware not found\n", __FUNCTION__);
+		//printk("%s, ERROR!! firmware not found\n", __FUNCTION__);
 	}
 
 }
@@ -1090,7 +1090,7 @@ static int drv260x_haptics_erase(struct input_dev *dev, int effect_id)
 	struct android_hal_stub *android = &pDrv2604data->android;
 	int rc = 0;
 
-	printk("%s enter\n", __func__);
+	//printk("%s enter\n", __func__);
 	pDrv2604data->effect_type = 0;
 	android->duration = 0;
 	return rc;
@@ -1102,7 +1102,7 @@ static void drv260x_haptics_set_gain(struct input_dev *dev, u16 gain)
 	char value = 0;
 	struct drv260x_data *haptics = input_get_drvdata(dev);
 
-	printk("%s enter\n", __func__);
+	//printk("%s enter\n", __func__);
 
 	if (gain == 0)
 		return;
@@ -1129,26 +1129,26 @@ static int drv260x_haptics_upload_effect(struct input_dev *dev,
 	int waveform_index = 0;
 	//int error;
 
-	printk("%s  %d enter\n", __func__, __LINE__);
+	//printk("%s  %d enter\n", __func__, __LINE__);
 
 	if (hrtimer_active(&android->stop_timer)) {
 		//rem = hrtimer_get_remaining(&pDrv2604data->timer);
 		rem = hrtimer_get_remaining(&android->stop_timer);
 		time_us = ktime_to_us(rem);
-		printk("waiting for playing clear sequence: %lld us\n",
-		       time_us);
+		/*printk("waiting for playing clear sequence: %lld us\n",
+		       time_us);*/
 		usleep_range(time_us, time_us + 100);
 	}
 
 	pDrv2604data->effect_type = effect->type;
-	printk("%s  %d  pDrv2604data->effect_type= 0x%x\n", __func__, __LINE__,
-	       pDrv2604data->effect_type);
+	/*printk("%s  %d  pDrv2604data->effect_type= 0x%x\n", __func__, __LINE__,
+	       pDrv2604data->effect_type);*/
 
 	if (pDrv2604data->effect_type == FF_CONSTANT) {
-		printk("%s  effect_type is  FF_CONSTANT!, duration=%d \n",
-		       __func__, effect->replay.length);
-		printk("%s  effect_type is  FF_CONSTANT!, mCurrMagnitude=%d \n",
-		       __func__, effect->u.constant.level);
+		/*printk("%s  effect_type is  FF_CONSTANT!, duration=%d \n",
+		       __func__, effect->replay.length);*/
+		/*printk("%s  effect_type is  FF_CONSTANT!, mCurrMagnitude=%d \n",
+		       __func__, effect->u.constant.level);*/
 		/*cont mode set duration */
 		android->duration = effect->replay.length;
 		pDrv2604data->work_mode = DRV260X_HAPTIC_ACTIVATE_RTP_MODE;
@@ -1161,11 +1161,11 @@ static int drv260x_haptics_upload_effect(struct input_dev *dev,
 			return -EINVAL;
 
 		if (effect->u.periodic.waveform != FF_CUSTOM) {
-			printk("drv260x only accept custom waveforms\n");
+			//printk("drv260x only accept custom waveforms\n");
 			return -EINVAL;
 		}
 
-		printk("%s  effect_type is  FF_PERIODIC! \n", __func__);
+		//printk("%s  effect_type is  FF_PERIODIC! \n", __func__);
 		if (copy_from_user(data, effect->u.periodic.custom_data,
 				   sizeof(s16) * CUSTOM_DATA_LEN))
 			return -EFAULT;
@@ -1174,8 +1174,8 @@ static int drv260x_haptics_upload_effect(struct input_dev *dev,
 		pDrv2604data->effect_id = data[0];
 		pDrv2604data->magnitude = effect->u.periodic.magnitude;	/*vmax level */
 
-		printk("HAL pass to driver, %s effect_id= %d, magnitude = %d\n", __func__,
-		       data[0], pDrv2604data->magnitude);
+		/*printk("HAL pass to driver, %s effect_id= %d, magnitude = %d\n", __func__,
+		       data[0], pDrv2604data->magnitude);*/
 
 		if ((pDrv2604data->effect_id < 0) ||
 		    (pDrv2604data->effect_id > (DRV260X_EFFECT_COUNT_MAX - 1)))
@@ -1208,7 +1208,7 @@ static int drv260x_haptics_upload_effect(struct input_dev *dev,
 			time_ms += 340; //double click.
 		}
 
-		printk("copy to HAL time_ms[%d]\n", time_ms);
+		//printk("copy to HAL time_ms[%d]\n", time_ms);
 
 		data[1] = time_ms / 1000;	/*second data */
 		data[2] = time_ms % 1000;	/*millisecond data */
@@ -1217,8 +1217,8 @@ static int drv260x_haptics_upload_effect(struct input_dev *dev,
 				 sizeof(s16) * CUSTOM_DATA_LEN))
 			return -EFAULT;
 	} else {
-		printk("%s Unsupported effect type: %d\n", __func__,
-		       effect->type);
+		/*printk("%s Unsupported effect type: %d\n", __func__,
+		       effect->type);*/
 	}
 
 	return 0;
@@ -1231,9 +1231,9 @@ static int drv260x_haptics_playback(struct input_dev *dev, int effect_id,
 	struct android_hal_stub *android = &pDrv2604data->android;
 	int rc = 0;
 
-	printk("%s effect_id=%d , val = %d\n", __func__, effect_id, val);
-	printk("%s pDrv2604data->effect_id=%d , pDrv2604data->work_mode = %d\n",
-	       __func__, pDrv2604data->effect_id, pDrv2604data->work_mode);
+	//printk("%s effect_id=%d , val = %d\n", __func__, effect_id, val);
+	/*printk("%s pDrv2604data->effect_id=%d , pDrv2604data->work_mode = %d\n",
+	       __func__, pDrv2604data->effect_id, pDrv2604data->work_mode);*/
 
 	if (val > 0)
 		pDrv2604data->state = 1;
@@ -1245,16 +1245,16 @@ static int drv260x_haptics_playback(struct input_dev *dev, int effect_id,
 	if (pDrv2604data->effect_type == FF_CONSTANT &&
 	    pDrv2604data->work_mode == DRV260X_HAPTIC_ACTIVATE_RTP_MODE) {
 
-		printk("%s enter cont_mode \n", __func__);
+		//printk("%s enter cont_mode \n", __func__);
 		queue_work(android->wq, &android->haptics_play_work);
 
 	} else if (pDrv2604data->effect_type == FF_PERIODIC &&
 		   pDrv2604data->work_mode ==
 		   DRV260X_HAPTIC_ACTIVATE_RAM_MODE) {
-		printk("%s enter  ram_mode111\n", __func__);
+		//printk("%s enter  ram_mode111\n", __func__);
 		queue_work(android->wq, &android->haptics_play_work);
 	} else {
-		printk("%s not support other mode\n", __func__);
+		//printk("%s not support other mode\n", __func__);
 		/*other mode */
 	}
 
@@ -1332,7 +1332,7 @@ drv260x_probe(struct i2c_client *client, const struct i2c_device_id *id)
 		goto err_free_mem;
 	}
 
-	pr_err("drv260x probe, i2c address= %x\n", client->addr);
+	//pr_err("drv260x probe, i2c address= %x\n", client->addr);
 
 	error = request_firmware_nowait(THIS_MODULE,
 					FW_ACTION_HOTPLUG,
@@ -1415,7 +1415,7 @@ drv260x_probe(struct i2c_client *client, const struct i2c_device_id *id)
 
 	error = android_hal_stub_init(haptics);
 	if (error) {
-		pr_err("Failed to init android hal stub: %d\n", error);
+		//pr_err("Failed to init android hal stub: %d\n", error);
 		goto err_free_mem;
 	}
 
@@ -1446,7 +1446,7 @@ static int __maybe_unused drv260x_suspend(struct device *dev)
 		return ret;
 	}
 
-	pr_err("drv260x_suspend successfully.\n");
+	//pr_err("drv260x_suspend successfully.\n");
 	return ret;
 }
 
@@ -1461,7 +1461,7 @@ static int __maybe_unused drv260x_resume(struct device *dev)
 		dev_err(dev, "Failed to unset standby mode\n");
 		return ret;
 	}
-	pr_err("drv260x_resume successfully.\n");
+	//pr_err("drv260x_resume successfully.\n");
 	return ret;
 }
 
