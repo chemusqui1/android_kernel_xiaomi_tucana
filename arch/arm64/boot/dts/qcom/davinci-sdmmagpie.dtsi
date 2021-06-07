@@ -402,6 +402,11 @@ And public attribution of xiaomi platforms(like F3 and so and)
 				hysteresis = <1000>;
 				type = "passive";
 			};
+			active-config1 {
+				temperature = <125000>;
+				hysteresis = <1000>;
+				type = "passive";
+			};
 		};
 	};
 
