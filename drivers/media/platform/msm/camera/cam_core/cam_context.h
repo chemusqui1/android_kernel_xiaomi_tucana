@@ -22,6 +22,9 @@
 /* Forward declarations */
 struct cam_context;
 
+/* max device name string length*/
+#define CAM_CTX_DEV_NAME_MAX_LENGTH 20
+
 /* max tag  dump header string length*/
 #define CAM_CONTEXT_DUMP_TAG_MAX_LEN 32
 
@@ -194,7 +197,7 @@ struct cam_ctx_ops {
  *
  */
 struct cam_context {
-	const char                  *dev_name;
+	char                         dev_name[CAM_CTX_DEV_NAME_MAX_LENGTH];
 	uint64_t                     dev_id;
 	uint32_t                     ctx_id;
 	struct list_head             list;
