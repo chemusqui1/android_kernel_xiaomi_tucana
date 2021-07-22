@@ -69,7 +69,7 @@ static unsigned int boot_config_shift;
  * There is no API from TZ to re-enable the registers.
  * So the SDI cannot be re-enabled when it already by-passed.
  */
-static int download_mode;
+static int download_mode = 1;
 static bool force_warm_reboot;
 
 static int in_panic;
