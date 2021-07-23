@@ -624,7 +624,8 @@ static void msm_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
 	uint32_t hw_type = get_hw_version_platform();
 
 	for (i = 0; i < chip->ngpio; i++, gpio++) {
-		if (HARDWARE_PLATFORM_DAVINCI == hw_type) {
+		if (HARDWARE_PLATFORM_DAVINCI == hw_type
+            || HARDWARE_PLATFORM_TUCANA == hw_type) {
 			/* gpio 0~3 is FP spi, gpio 59~62 is NFC spi */
 			if (i < 4 || (i > 58 && i < 63))
 				continue;
