@@ -348,13 +348,9 @@ endif
 
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
 	dtbo-$(CONFIG_ARCH_SDMMAGPIE) += \
-		davinci-sdmmagpie-overlay.dtbo \
-		davinci_m0a-sdmmagpie-overlay.dtbo \
-		davinci_m0b-sdmmagpie-overlay.dtbo
+		tucana-sdmmagpie-overlay.dtbo
 
-davinci-sdmmagpie-overlay.dtbo-base := davinci-sdmmagpie.dtb
-davinci_m0a-sdmmagpie-overlay.dtbo-base := davinci_m0a-sdmmagpie.dtb
-davinci_m0b-sdmmagpie-overlay.dtbo-base := davinci_m0b-sdmmagpie.dtb
+tucana-sdmmagpie-overlay.dtbo-base := tucana-sdmmagpie.dtb
 endif
 
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)

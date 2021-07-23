@@ -72,6 +72,7 @@ enum {
 	HW_PLATFORM_IOT = 32,
 	HW_PLATFORM_IDP = 34,
 	HW_PLATFORM_F10 = 39,
+    HW_PLATFORM_F4  = 42,
 	HW_PLATFORM_INVALID
 };
 
@@ -98,6 +99,7 @@ const char *hw_platform[] = {
 	[HW_PLATFORM_IOT] = "IOT",
 	[HW_PLATFORM_IDP] = "IDP",
 	[HW_PLATFORM_F10] = "DAVINCI",
+    [HW_PLATFORM_F4]  = "TUCANA",
 };
 
 enum {
@@ -1850,8 +1852,10 @@ uint32_t get_hw_version_platform(void)
 	uint32_t hw_type = socinfo_get_platform_type();
 	if (hw_type == HW_PLATFORM_F10)
 		return HARDWARE_PLATFORM_DAVINCI;
-	else
-	return HARDWARE_PLATFORM_UNKNOWN;
+	else if (hw_type == HW_PLATFORM_F4)
+		return HARDWARE_PLATFORM_TUCANA;
+    else
+        return HARDWARE_PLATFORM_UNKNOWN;
 }
 EXPORT_SYMBOL(get_hw_version_platform);
 
