@@ -1722,7 +1722,7 @@
 				};
 			};
 
-			pri_i2s_data0_active: pri_i2s_data0_active {
+		    pri_i2s_data0_active: pri_i2s_data0_active {
 				mux {
 					pins = "gpio52";
 					function = "pri_mi2s";
